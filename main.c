@@ -206,24 +206,33 @@ uint8_t calc_speed( void )
 		break;
 	case M_RANDOM_FORWARD:
 	case M_RANDOM_RANDOM:
-		/*
+	{/*
 		 * Calculate speed in 25 steps.
 		 * 0 = 0V, ...,  25 = ~9V
 		 *
 		 * For a better and faster playing pleasure,
 		 * a probability of
-		 * 10% values between   0V and 3.5V and
-		 * 90% values between 3.5V and   9V is selected.
+		 * 10% values between   0V and 3,5V and
+		 * 70% values between 3,5V and 6,0V is selected.
+		 * 20% values between 7,0V and 9,0V is selected.
 		 */
-		if ( get_random_between( 0, 255 ) == 0 )
+		static uint8_t r = 0;
+		r = get_random_between( 0, 10 );
+		if ( r == 0 )
 		{ /* 20% slow ( 0V - ~3,5V ) */
-			return ( get_random_between(  0, 10 ) * 10 );
+			return get_random_between(  0, 100 );
+		}
+		else if ( r == 1 || r == 2 )
+		{ /* 20% very fast /~7,0V - 9,0V */
+			return get_random_between( 201, 255);
 		}
 		else
-		{ /* 80% fast ( ~3,5V - 9V ) */
-			return ( get_random_between( 11, 25 ) * 10 );
+		{ /* 80% fast ( ~3,5V - ~7,0V ) */
+			return get_random_between( 101, 200 );
 		}
+	}
 		break;
+
 	}
 }
 
