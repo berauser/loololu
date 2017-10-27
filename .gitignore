@@ -1,0 +1,17 @@
+# output
+loolou
+
+# eclipse
+*.project
+*.cproject
+*.settings
+
+# gcc output
+*.o
+*.d
+*.elf
+*.hex
+*.eep
+*.map
+*.sym
+*.lss
