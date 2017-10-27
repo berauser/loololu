@@ -43,14 +43,14 @@
 		sei();                         /* Enable interrupts */\
 	} while(0)
 
-#define PWM_enable( mode, clk, initial )                  \
+#define PWM_enable( mode, clk, reg, initial )             \
 		do {                                              \
 		TCCR0A = (mode);  	/* PWM mode */                \
 		TCCR0B = (clk);     /* clock source */            \
-		OCR0A  = (initial); /* initial PWM pulse width */ \
+		(reg)  = (initial); /* initial PWM pulse width */ \
 		} while(0)
 
-#define PWM_set( value ) ( OCR0A  = (value) )
+#define PWM_set( reg, value ) ( (reg)  = (value) )
 
 /*TODO*/
 #define PWM_disbale() \
