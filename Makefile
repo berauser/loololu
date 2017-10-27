@@ -27,11 +27,10 @@ AVRDUDE := /usr/bin/avrdude
 
 ########### Programmer #################
 
-AVRDUDE_PROGRAMMER = avrispv2
-AVRDUDE_PORT = /dev/ttyACM0
+AVRDUDE_PROGRAMMER ?= avrispv2
+AVRDUDE_PORT       ?= /dev/ttyACM0
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
-#AVRDUDE_WRITE_FLASH = -U eeprom:w:$(TARGET).eep
 
 AVRDUDE_FLAGS := -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)

@@ -1,4 +1,42 @@
 
+# Dependencies
+
+The project loolou depends on the avr-gcc and avrdude.
+
+## Ubuntu
+
+```
+$ sudo apt-get install gcc-avr avrdude
+```
+
+# Build
+## compile
+
+```
+$ make
+```
+
+## clean
+```
+$ make clean
+```
+
+## flash to attiny2313
+
+```
+# use default
+# programmer: avrispv2
+# usb device: /dev/ttyACM0
+$ sudo make burn
+```
+
+```
+# overwrite defaults
+# AVRDUDE_PROGRAMMER override programmer type
+# AVRDUDE_PORT overrides usb device
+$ sudo make AVRDUDE_PROGRAMMER=avrispv2 AVRDUDE_PORT=/dev/ttyACM0 burn
+```
+
 
 ## Useful links
 
