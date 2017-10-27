@@ -79,11 +79,6 @@ void init( void )
 
 void show_mode( void ) {
 
-//	GPIO_on ( PORTD, PD0 );
-//				GPIO_off( PORTD, PD1 );
-//				GPIO_off( PORTA, PA1 );
-//				GPIO_off( PORTA, PA0 );
-
 	switch ( mode )
 	{
 		case M_NORMAL_FORWARD:
@@ -121,13 +116,13 @@ void show_mode( void ) {
 
 void show_direction ( void )
 {
-	if( direction == BACKWARD )	DEC_ONE_BETWEEN( active_led, LED1, LED4 );
-	else                        ADD_ONE_BETWEEN( active_led, LED1, LED4 );
+	if( direction == FORWARD )	ADD_ONE_BETWEEN( active_led, LED1, LED4 );
+	else                        DEC_ONE_BETWEEN( active_led, LED1, LED4 );
 
 	switch ( active_led )
 	{
 		case LED1:
-			GPIO_off ( PORTD, PD4 );
+			GPIO_off( PORTD, PD4 );
 			GPIO_off( PORTD, PD5 );
 			GPIO_off( PORTB, PB0 );
 			GPIO_on ( PORTB, PB1 );
@@ -163,13 +158,13 @@ void trigger_direction( void )
 {
 	if( direction == FORWARD )
 	{
-		GPIO_off( PORTB, PB3 );
 		GPIO_on ( PORTB, PB4 );
+		GPIO_off( PORTB, PB3 );
 	}
 	else
-	{
-		GPIO_on ( PORTB, PB3 );
+	{	/* BACKWARD */
 		GPIO_off( PORTB, PB4 );
+		GPIO_on ( PORTB, PB3 );
 	}
 }
 
