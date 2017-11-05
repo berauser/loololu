@@ -166,8 +166,6 @@ void setup( void )
 	// timer interrupt
 	TIMER_enable( MODE_TIMERA, MODE_TIMERB );
 
-	TIMER_set( TIMER_INT_DEPLAY );      // number to count up to (0x70 = 112)
-
 	sei();                         /* Enable interrupts */
 }
 
@@ -185,11 +183,14 @@ void init( void )
 	// show current mode
 	show_mode();
 
-	// initial pwm
-	PWM_set( REGISTER_PWM, PWM_3V );
-
 	// set seed
 	init_random( TCNT1L );
+
+	// initial pwm
+	trigger_speed( PWM_3V );
+
+	// set initial timer delay
+	TIMER_set( TIMER_INT_DEPLAY );
 }
 
 // ****************************************************************************
