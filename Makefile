@@ -72,7 +72,7 @@ ASFLAGS += -DF_OSC=$(F_CPU)
 
 CFLAGS  += -gdwarf-2
 CFLAGS  += -DF_CPU=$(F_CPU)UL
-CFLAGS  += -O3
+CFLAGS  += -Os
 #CFLAGS += -mint8
 #CFLAGS += -mshort-calls
 CFLAGS  += -funsigned-char
@@ -159,8 +159,9 @@ $(TARGET).hex: $(TARGET).elf
 
 size:
 	@echo ""
-	$(SIZE) --target=$(FORMAT) $(TARGET).hex
-	$(SIZE) -A $(TARGET).elf
+	$(SIZE) --mcu=$(MCU) -C $(TARGET).elf
+	$(SIZE) --mcu=$(MCU) -A $(TARGET).elf
+	$(SIZE) --mcu=$(MCU) --target=$(FORMAT) $(TARGET).hex
 	@echo ""
 
 prepare:
