@@ -10,6 +10,16 @@
 #define PWM_3V   85 // 3V ( (9V / 255) * 85 = 3V )
 #define PWM_9V  255 // 9V
 
+
+// ********************************************************
+// PWM values
+// ********************************************************
+//
+//   1000000Hz ( F_CPU )
+//  --------------------- = 976,56 ( 0x3D0 )
+//   1024 * 1Hz (1 sec)
+#define TIMER_INT_DEPLAY 0x3D0
+
 // ********************************************************
 // Pin description
 // ********************************************************
@@ -74,6 +84,10 @@
 #define MODE_PWM      (1 << COM0A1) | (1 << WGM00)
 #define CLOCK_PWM     (1 << CS01)
 
+#define REGISTER_TIMER OCR1A
+#define MODE_TIMERA    0x00
+#define MODE_TIMERB    (1 << WGM12) | (1 << CS12) | (1 << CS10)
+
 // *** BUTTON *********************************************
 #define PIN_BUTTON  PD2
 #define PORT_BUTTON PORTD
@@ -83,10 +97,11 @@
 // ********************************************************
 // Global variables
 // ********************************************************
-static GameDirection direction   = FORWARD;
+
 static LEDNumeration active_led  = LED1;
-static uint8_t       motor_power = PWM_3V;
 static Mode          mode        = M_NORMAL_FORWARD;
+static uint8_t       speed       = PWM_3V;
+static GameDirection direction   = FORWARD;
 
 // ********************************************************
 // Function definition
@@ -95,8 +110,9 @@ void setup ( void );
 void init  ( void );
 
 void show_mode( void );
-void show_direction ( void );
-void trigger_direction( void );
+void show_direction ( GameDirection );
+void trigger_direction( GameDirection );
+void trigger_speed( uint8_t );
 
 uint8_t calc_speed( void );
 GameDirection calc_direction( void );
@@ -108,7 +124,18 @@ ISR(INT0_vect)
 {
 	ADD_ONE_BETWEEN( mode, M_NORMAL_FORWARD, M_RANDOM_RANDOM );
 	show_mode();
+
+	/* reset timer, call ISR to change speed/direction immediately */
+	TIMER_reset();
+	TIMER1_COMPA_vect();
 }
+
+ISR(TIMER1_COMPA_vect)
+{
+	direction = calc_direction();
+	speed = calc_speed();
+}
+
 
 // ****************************************************************************
 // setup system, set pin directions
@@ -135,6 +162,13 @@ void setup( void )
 	// button
 	GPIO_init( DDR_BUTTON, PIN_BUTTON, INPUT);
 	GPIO_interrupt( PORT_BUTTON, PIN_BUTTON, INT0, EDGE_TYPE_BUTTON );
+
+	// timer interrupt
+	TIMER_enable( MODE_TIMERA, MODE_TIMERB );
+
+	TIMER_set( TIMER_INT_DEPLAY );      // number to count up to (0x70 = 112)
+
+	sei();                         /* Enable interrupts */
 }
 
 // ****************************************************************************
@@ -143,10 +177,10 @@ void setup( void )
 void init( void )
 {
 	// set initial values
-	direction   = FORWARD;
 	active_led  = LED1;
-	motor_power = PWM_3V;
 	mode        = M_NORMAL_FORWARD;
+	speed       = PWM_3V;
+	direction   = FORWARD;
 
 	// show current mode
 	show_mode();
@@ -201,10 +235,10 @@ void show_mode( void ) {
 // ****************************************************************************
 // shows the current direction
 // ***************************************************************************/
-void show_direction ( void )
+void show_direction ( GameDirection direction )
 {
-	if( direction == FORWARD )	ADD_ONE_BETWEEN( active_led, LED1, LED4 );
-	else                        DEC_ONE_BETWEEN( active_led, LED1, LED4 );
+	if( direction == FORWARD ) ADD_ONE_BETWEEN( active_led, LED1, LED4 );
+	else                       DEC_ONE_BETWEEN( active_led, LED1, LED4 );
 
 	switch ( active_led )
 	{
@@ -244,7 +278,7 @@ void show_direction ( void )
 // ****************************************************************************
 // change the direction
 // ***************************************************************************/
-void trigger_direction( void )
+void trigger_direction( GameDirection direction )
 {
 	if( direction == FORWARD )
 	{
@@ -275,6 +309,14 @@ GameDirection calc_direction( void )
 			return ( (get_random_between( 0, 10 ) == 0) ? BACKWARD : FORWARD ); /* 10% backward : 90% forward */
 			break;
 	}
+}
+
+// ****************************************************************************
+// set motor speed
+// ***************************************************************************/
+void trigger_speed( uint8_t speed )
+{
+	PWM_set( REGISTER_PWM, speed );
 }
 
 // ****************************************************************************
@@ -327,20 +369,6 @@ uint8_t calc_speed( void )
 // ****************************************************************************
 // game
 // ***************************************************************************/
-void play( void )
-{
-	static uint8_t cycle = 0;
-	if( cycle == 0 )
-	{ /* is called every 1 second */
-		direction = calc_direction();
-		trigger_direction();
-		PWM_set( REGISTER_PWM, calc_speed() );
-	}
-	show_direction();
-	ADD_ONE_BETWEEN( cycle, 0, 10 );
-	_delay_ms( 100 );
-}
-
 int main(void) {
 
 	setup();
@@ -348,7 +376,11 @@ int main(void) {
 
 	/* main loop */
 	while (1) {
-		play();
+		/* all other uses interrupts */
+		trigger_speed( speed );
+		trigger_direction( direction );
+		show_direction( direction );
+		_delay_ms( 250 );
 	}
 
 	return 0;

@@ -8,7 +8,7 @@ INCS   := .
 ########### Microcontroller ############
 
 MCU    := attiny2313
-F_CPU  := 2000000
+F_CPU  := 1000000
 FORMAT := ihex
 
 ########### Compiler ###################

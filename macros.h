@@ -37,10 +37,9 @@
 
 #define GPIO_interrupt( port, pin, interrupt, edgeType )      \
 	do {                                                      \
-		(port) |= (1 << (pin));       /* Enable pull-up */   \
+		(port) |= (1 << (pin));       /* Enable pull-up */    \
 		GIMSK   |= (1 << (interrupt)); /* Enable interrupt */ \
 		MCUCR   |= (edgeType);                                \
-		sei();                         /* Enable interrupts */\
 	} while(0)
 
 #define PWM_enable( mode, clk, reg, initial )             \
@@ -55,7 +54,26 @@
 /*TODO*/
 #define PWM_disbale() \
 		do {          \
-		}while(0)
+		} while(0)
+
+#define TIMER_enable( value1, value2 )                          \
+		do {                                                    \
+		TIMSK  = (1 << OCIE1A); /* Set the ISR COMPA vect */    \
+		TCCR1A = (value1);      /* CTC mode */                  \
+		TCCR1B = (value2);      /* Set the Timer Mode to CTC */ \
+		} while(0)
+
+#define TIMER_set( value ) ( OCR1A  = (value) )
+
+#define TIMER_reset()    \
+		do {             \
+			TCNT1 = 0x0; \
+		} while(0)
+
+/*TODO*/
+#define TIMER_disable() \
+		do {            \
+		} while(0)
 
 #define init_random(seed) srand( (seed) )
 #define get_random()      rand()
