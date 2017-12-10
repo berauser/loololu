@@ -167,5 +167,15 @@ size:
 prepare:
 	@mkdir -p .dep
 
+doc:
+	( cd documenation/ && \
+		pdflatex documentation.tex && \
+		( gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=documenation-small.pdf documentation.pdf || true ) \
+	)
+
+doc-clean:
+	( cd documenation/ && \
+		rm -rf *.log *.lof *.lot *.lol *.toc *.aux *.out *.pdf\
+	)
 clean:
 	rm -rf $(OBJS) $(TARGET_LIST) $(TARGET).map $(DEPDIR) $(OBJDIR)

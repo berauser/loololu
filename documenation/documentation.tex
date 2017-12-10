@@ -1,0 +1,88 @@
+\documentclass[a4paper]{scrartcl}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Includes and setup
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{geometry}
+ \geometry{
+  left=20mm,
+  right=20mm,
+  top=20mm,
+ }
+\usepackage{ngerman}   % german linguistics
+\usepackage{textcomp}  % textmu, textohm
+\usepackage{amssymb}   % varnothing
+\usepackage{eurosym}   % \EUR{}
+\usepackage{graphicx}  % includegraphicx
+\usepackage{subfigure} % subfigure
+\usepackage{hyperref}  % href
+\usepackage{listings}  % lstlisting
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Documentation
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Author
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\author{Benjamin Rauser}
+	\title{loolou}
+	\subtitle{Looping Louie Erweiterung}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	% title page --------------------------------------
+	\input{title}
+	\newpage
+
+	% tabel of contents -------------------------------
+	\tableofcontents
+	\newpage
+
+	% motivation --------------------------------------
+	\section{Motivation}
+	\input{motivation}
+	\newpage
+
+	% tools -------------------------------------------
+	\section{Tools}
+	\input{tools}
+	%\newpage
+
+	% hints -------------------------------------------
+	\section{Hints}
+	\input{hints}
+	\newpage
+
+	% instructions ------------------------------------
+	\section{Instructions}
+	\input{instructions}
+	\newpage
+
+	% instructions ------------------------------------
+	\section{Program}
+	\input{program}
+	\newpage
+
+	% components --------------------------------------
+	\section{Components}
+	\input{components}
+	\newpage
+
+	% list if figures ---------------------------------
+	\listoffigures
+	%\newpage
+
+	% list of tables ----------------------------------
+	\listoftables
+	%\newpage
+
+	% table of listings -------------------------------
+	\lstlistoflistings
+	%\newpage
+
+\end{document}

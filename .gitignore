@@ -15,3 +15,12 @@ loolou
 *.map
 *.sym
 *.lss
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.lot
+*.lol
+*.lof
+
