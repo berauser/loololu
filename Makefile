@@ -170,7 +170,7 @@ prepare:
 doc:
 	( cd documenation/ && \
 		pdflatex documentation.tex && \
-		( gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=documenation-small.pdf documentation.pdf || true ) \
+		( gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=documentation-small.pdf documentation.pdf || true ) \
 	)
 
 doc-clean:
