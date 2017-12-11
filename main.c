@@ -166,7 +166,8 @@ void setup( void )
 	// timer interrupt
 	TIMER_enable( MODE_TIMERA, MODE_TIMERB );
 
-	sei();                         /* Enable interrupts */
+	// Enable interrupts
+	sei();
 }
 
 // ****************************************************************************
@@ -350,7 +351,7 @@ uint8_t calc_speed( void )
 		static uint8_t r = 0;
 		r = get_random_between( 0, 10 );
 		if ( r == 0 )
-		{ /* 20% slow ( 0V - ~3,5V ) */
+		{ /* 10% slow ( 0V - ~3,5V ) */
 			return get_random_between(  0, 100 );
 		}
 		else if ( r == 1 || r == 2 )

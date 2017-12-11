@@ -128,7 +128,9 @@ all: prepare $(TARGET_LIST) size
 help:
 	@echo "make help   print this text"
 	@echo "make all    compile all"
+	@echo "make doc    compile the documentation"
 	@echo "make clean  remove all files"
+	@echo "make burn   flash to device"
 
 ############### flashing ###############
 
