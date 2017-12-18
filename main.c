@@ -86,13 +86,13 @@
 
 #define REGISTER_TIMER OCR1A
 #define MODE_TIMERA    0x00
-#define MODE_TIMERB    (1 << WGM12) | (1 << CS12) | (1 << CS10)
+#define MODE_TIMERB    (1 << WGM12) | (1 << CS12) | (1 << CS10) // clk/1024
 
 // *** BUTTON *********************************************
 #define PIN_BUTTON  PD2
 #define PORT_BUTTON PORTD
 #define DDR_BUTTON  DDRD
-#define EDGE_TYPE_BUTTON (1 << ISC01)
+#define EDGE_TYPE_BUTTON (1 << ISC01) // interrupt on falling egde
 
 // ********************************************************
 // Global variables
@@ -138,9 +138,9 @@ ISR(TIMER1_COMPA_vect)
 
 
 // ****************************************************************************
-// setup system, set pin directions
+// initialize gpio, set pin directions
 // ***************************************************************************/
-void setup( void )
+void init( void )
 {
 	// leds
 	GPIO_init( DDR_LED5, PIN_LED5, OUTPUT ); // 1
@@ -171,9 +171,9 @@ void setup( void )
 }
 
 // ****************************************************************************
-// initialze syetem with default values
+// setup system with default values
 // ***************************************************************************/
-void init( void )
+void setup( void )
 {
 	// set initial values
 	active_led  = LED1;
@@ -359,7 +359,7 @@ uint8_t calc_speed( void )
 			return get_random_between( 201, 255);
 		}
 		else
-		{ /* 80% fast ( ~3,5V - ~7,0V ) */
+		{ /* 70% fast ( ~3,5V - ~7,0V ) */
 			return get_random_between( 101, 200 );
 		}
 	}
@@ -373,8 +373,8 @@ uint8_t calc_speed( void )
 // ***************************************************************************/
 int main(void) {
 
-	setup();
 	init();
+	setup();
 
 	/* main loop */
 	while (1) {

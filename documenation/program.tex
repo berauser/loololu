@@ -27,11 +27,6 @@ Die folgende Tabelle beschreibt die 4 verschiedenen Modi.
 \end{table}
 \vspace{0.5cm}
 
-\subsection{PCB}
-
-tbd % TODO
-\href{https://aisler.net/berauser/loolou/main-pcb}{https://aisler.net/berauser/loolou/main-pcb}
-
 \subsection{Source code}
 tbd % TODO
 \subsubsection{Github}
@@ -41,6 +36,11 @@ tbd % TODO
 \vspace{0.5cm}
 
 \subsubsection{Defines}
+
+Die defines sind in der Datei main.c definiert. Sie definieren die PINs und PORTs der LEDs, PWMs und des Drucktasters f"ur den ATTINY2313.
+Ebenso werden hier die Timer-Delays und PWM-Frequenzen f"ur den Spielablauf definiert. Das folgende Listing (Listing ~\ref{lst:defines}) zeigt alle, f"ur den Spielablauf wichtigen, Defines. 
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Defines},label=lst:defines]
 // ********************************************************
 // PWM values
@@ -125,25 +125,30 @@ tbd % TODO
 
 #define REGISTER_TIMER OCR1A
 #define MODE_TIMERA    0x00
-#define MODE_TIMERB    (1 << WGM12) | (1 << CS12) | (1 << CS10)
+#define MODE_TIMERB    (1 << WGM12) | (1 << CS12) | (1 << CS10) // clk/1024
 
 // *** BUTTON *********************************************
 #define PIN_BUTTON  PD2
 #define PORT_BUTTON PORTD
 #define DDR_BUTTON  DDRD
-#define EDGE_TYPE_BUTTON (1 << ISC01)
+#define EDGE_TYPE_BUTTON (1 << ISC01) // interrupt on falling egde
 \end{lstlisting}
 \vspace{0.5cm}
 
 \subsubsection{Main-Method}
+
+Im Listing ~\ref{lst:main} ist die main-Funktion des Programmes. Diese initialisiert die Peripherie und springt dann in eine while-true-loop.
+Die while-true-loop setzt in jeden Durchlauf die aktuelle Geschwindigkeit und schaltet die LEDs f"ur die Richtungsanzeige ein, beziehungsweise aus. Anschlie"send werden 250ms gewartet bis die n"achste LED f"ur die Richtungsanzeige eingeschaltet wird. 
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Main-Method},label=lst:main]
 // ****************************************************************************
 // game
 // ***************************************************************************/
 int main(void) {
 
-	setup();
 	init();
+	setup();
 
 	/* main loop */
 	while (1) {
@@ -159,12 +164,16 @@ int main(void) {
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Setup-Method}
+\subsubsection{Init-Method}
+
+Die Methode init initialisert die GPIOs (General Porpuse Input/Output) des ATTINY.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Setup-Method},label=lst:setup]
 // ****************************************************************************
-// setup system, set pin directions
+// initialize gpio, set pin directions
 // ***************************************************************************/
-void setup( void )
+void init( void )
 {
 	// leds
 	GPIO_init( DDR_LED5, PIN_LED5, OUTPUT ); // 1
@@ -196,10 +205,14 @@ void setup( void )
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Init-Method}
+\subsubsection{Setup-Method}
+
+Die Setup-Methode initialisert das loolou-Programm mit den default-Werten.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Init-Method},label=lst:init]
 // ****************************************************************************
-// initialze syetem with default values
+// setup syStem with default values
 // ***************************************************************************/
 void init( void )
 {
@@ -225,6 +238,12 @@ void init( void )
 \vspace{0.5cm}
 
 \subsubsection{Interrupt Service Routine}
+
+Das Programm loolou implementiert zwei verschiedene Interrupt Service Routinen (ISR) - die ISR(INT0\_vect) und ISR(TIMER1\_COMPA\_vect). \\
+Die ISR(INT0\_vect) wird bei einer fallenden Flanke am Drucktaster aufgerufen. In der ISR(INT0\_vect) wird der Modus des Spieles um eins hochgez"ahlt und neu ausgegeben. Anschlie"send wird der Timer zur"uckgesetzt und aufgerufen um die neue Geschwindigkeit und Spiel-Richtung zu setzen. \\
+Die Interrupt Service Routine ISR(TIMER1\_COMPA\_vect) wird jede Sekunde aufgerufen und berechnet die Geschwindigkeit und die Spiel-Richtung neu.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Interrupt Service Routine},label=lst:isr]
 // ****************************************************************************
 // interrupt service routine
@@ -248,6 +267,12 @@ ISR(TIMER1_COMPA_vect)
 \vspace{0.5cm}
 
 \subsubsection{Calculate direction}
+
+Die Funktion calc\_direction gibt anhand des aktuellen Spielmodus die Spiel-Richtung zur"uck.
+F"ur die drei Spielmodis \grqq{}Einfacher Modus\grqq{}, \grqq{}Schneller Modus\grqq{} und \grqq{}Zuf"alliger Modus\grqq{} wird immer die Spiel-Richtung \grqq{}forw"arts\grqq{} ausgeben.
+Im Spielmodus \grqq{}Zuf"alliger Modus mit R"uckw"artsgang\grqq{} wird anhand einer Zufallszahl die Spiel-Richtung berechnet. In diesem Modus wird etwa 10\% \grqq{}r"uckw"arts\grqq{} und etwa 90\% \grqq{}forw"arts\grqq{} zur"uckgegeben.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Calculate direction},label=lst:calcdirection]
 // ****************************************************************************
 // calculates a new direction
@@ -271,6 +296,14 @@ GameDirection calc_direction( void )
 \vspace{0.5cm}
 
 \subsubsection{Calculate speed}
+
+Die Funktion calculate\_speed gitb anhand des Spielmodus die berechnete Geschwindigkeit zur"uck.
+Im Modus \grqq{}Einfacher Modus\grqq{} wird immer der PWM-Wert f"ur 3V und im Modus \grqq{}Schneller Modus\grqq{} der PWM-Wert f"ur 9V zur"uckgeliefert.
+In den Spielmodis \grqq{}Zuf"alliger Modus\grqq{} und \grqq{}Zuf"alliger Modus mit R"uckw"artsgang\grqq{} wird die Geschwindigkeit anhand zweier Zufallszahlen berechnet.
+Dabei wird die erste Zufallszahl f"ur die grobe Einordnung der Geschwindigkeit verwendet und die zweite Zufallszahl f"ur die exakten PWM-Wert, der dann auch zur"uckgegeben wird. Die erste Zufallszahl ist in dieser BErechnung notwendig um gr"o"sere Spr"unge zwischen den Geschwindigkeiten zu reduzieren. 
+Die Werte sind wie folgt aufgeteilt: Etwa 10\% zwischen 0.0V und \~{}3.5V, etwa 70\% zwischen \~{}3.5V und \~{}7.0V, sowie 20\% zwischen \~{}7.0V und \~{}9.0V. 
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Calculate Speed},label=lst:calcspeed]
 // ****************************************************************************
 // calculates a new speed
@@ -310,7 +343,7 @@ uint8_t calc_speed( void )
 			return get_random_between( 201, 255);
 		}
 		else
-		{ /* 80% fast ( ~3,5V - ~7,0V ) */
+		{ /* 70% fast ( ~3,5V - ~7,0V ) */
 			return get_random_between( 101, 200 );
 		}
 	}
@@ -352,7 +385,7 @@ tbd % TODO
 \textbf{Der Strom darf nicht w"ahrend dem flashen eingesteckt sein.}
 
 \subsubsection{Programming}
-\begin{lstlisting}[caption={Programming},language=sh,label=lst:builddoc]
+\begin{lstlisting}[caption={Programming},language=sh,label=lst:makeburn]
 make burn
 # or
 make AVRDUDE_PROGRAMMER=avrispv2 AVRDUDE_PORT=/dev/ttyAMC0 burn
