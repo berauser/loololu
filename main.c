@@ -1,3 +1,18 @@
+// *****************************************************************************
+// Title:  loolou
+// Author: Benjamin Rauser
+// Date:   19/12/2017
+//
+// loolou ist lizenziert unter der Charityware.
+// Sie können es verwenden und kopieren, so viel Sie wollen,
+// aber ich möchte Sie ermutigt,
+// für ein Kinder-Wohltätigkeitsprojekt Ihrer Wahl zu spenden.
+//
+// loolou is Charityware.
+// You can use and copy it as much as you like,
+// but you are encouraged to make a donation
+// to a childrens's charity project of your choice.
+// *****************************************************************************
 
 #include "defines.h"
 #include "macros.h"
@@ -9,7 +24,6 @@
 #define PWM_OFF   0 // 0V ( OFF )
 #define PWM_3V   85 // 3V ( (9V / 255) * 85 = 3V )
 #define PWM_9V  255 // 9V
-
 
 // ********************************************************
 // PWM values

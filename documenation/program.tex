@@ -1,4 +1,4 @@
-\subsection{Modes}
+\subsection{Spielmodis}
 
 Die loolou Erweiterung hat vier verschiedene Modi zum Spielen. Diese k"onnen w"ahrend dem Spiel einfach "uber den Drucktaster am Oberteil der Spielbasis umgeschaltet werden.
 Die vier roten LEDs neben dem Drucktaster zeigen dabei den aktuellen Modus an. \\
@@ -27,12 +27,15 @@ Die folgende Tabelle beschreibt die 4 verschiedenen Modi.
 \end{table}
 \vspace{0.5cm}
 
+\newpage
 \subsection{Source code}
-tbd % TODO
-\subsubsection{Github}
 
-tbd % TODO
-\href{https://github.com/}{https://github.com/}
+Der Source-Code von loolou ist ver"offentlich und kann heruntergeladen und selbst kompiliert werden.
+Bitte beachten Sie die Lizenz von loolou. Zu finden ist diese im Kapitel ~\ref{section:licence} auf Seite ~\pageref{section:licence}.
+\subsubsection{Github}\label{subsubsection:github}
+
+Der Source-Code ist auf Github ver"offentlich und kann unter folgendem Link heruntergeladen werden. \\
+\begin{center}\href{https://github.com/berauser/loololu}{https://github.com/berauser/loololu}\end{center}
 \vspace{0.5cm}
 
 \subsubsection{Defines}
@@ -135,7 +138,7 @@ Ebenso werden hier die Timer-Delays und PWM-Frequenzen f"ur den Spielablauf defi
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Main-Method}
+\subsubsection{Main-Methode}
 
 Im Listing ~\ref{lst:main} ist die main-Funktion des Programmes. Diese initialisiert die Peripherie und springt dann in eine while-true-loop.
 Die while-true-loop setzt in jeden Durchlauf die aktuelle Geschwindigkeit und schaltet die LEDs f"ur die Richtungsanzeige ein, beziehungsweise aus. Anschlie"send werden 250ms gewartet bis die n"achste LED f"ur die Richtungsanzeige eingeschaltet wird. 
@@ -164,7 +167,7 @@ int main(void) {
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Init-Method}
+\subsubsection{Init-Methode}
 
 Die Methode init initialisert die GPIOs (General Porpuse Input/Output) des ATTINY.
 
@@ -205,7 +208,7 @@ void init( void )
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Setup-Method}
+\subsubsection{Setup-Methode}
 
 Die Setup-Methode initialisert das loolou-Programm mit den default-Werten.
 
@@ -266,7 +269,7 @@ ISR(TIMER1_COMPA_vect)
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Calculate direction}
+\subsubsection{Calculate direction Methode}
 
 Die Funktion calc\_direction gibt anhand des aktuellen Spielmodus die Spiel-Richtung zur"uck.
 F"ur die drei Spielmodis \grqq{}Einfacher Modus\grqq{}, \grqq{}Schneller Modus\grqq{} und \grqq{}Zuf"alliger Modus\grqq{} wird immer die Spiel-Richtung \grqq{}forw"arts\grqq{} ausgeben.
@@ -295,7 +298,7 @@ GameDirection calc_direction( void )
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Calculate speed}
+\subsubsection{Calculate speed Methode}
 
 Die Funktion calculate\_speed gitb anhand des Spielmodus die berechnete Geschwindigkeit zur"uck.
 Im Modus \grqq{}Einfacher Modus\grqq{} wird immer der PWM-Wert f"ur 3V und im Modus \grqq{}Schneller Modus\grqq{} der PWM-Wert f"ur 9V zur"uckgeliefert.
@@ -354,33 +357,33 @@ uint8_t calc_speed( void )
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsection{How to compile}
-\subsubsection{Build dependencies}
+\subsection{Kompilieren des Quellcodes}
+\subsubsection{Abh"angigkeiten an das Buildsystem}
 \begin{lstlisting}[caption={Build dependencies},language=sh,label=lst:builddep]
 sudo apt-get install gcc-avr avrdude
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Compile}
+\subsubsection{Kompilieren}
 \begin{lstlisting}[caption={Compile},language=sh,label=lst:makeall]
 make
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Clean}
+\subsubsection{Aufr"aumen}
 \begin{lstlisting}[caption={Clean},language=sh,label=lst:makeclean]
 make clean
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsubsection{Create documentation}
+\subsubsection{Erstellen der Dokumentation}
 \begin{lstlisting}[caption={Create documentation},language=sh,label=lst:builddoc]
 make doc
 \end{lstlisting}
 \vspace{0.5cm}
 
 
-\subsection{How to program the Attiny2313}
+\subsection{Wie der Attiny2313 programmiert wird}
 tbd % TODO
 \textbf{Der Strom darf nicht w"ahrend dem flashen eingesteckt sein.}
 
