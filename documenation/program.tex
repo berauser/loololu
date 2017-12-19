@@ -357,38 +357,76 @@ uint8_t calc_speed( void )
 \end{lstlisting}
 \vspace{0.5cm}
 
-\subsection{Kompilieren des Quellcodes}
+\subsection{Kompilieren des Sourcecodes}
 \subsubsection{Abh"angigkeiten an das Buildsystem}
+
+Um den C-Sourcecode f"ur den ATTINY2313 zu "ubersetzen werden einige wenige Anfoderungen an das Buildsystem gestellt.
+Es wir lediglich die AVR-Toolchain (avr-gcc) und ein Programmer f"ur Atmel-Mikrocontroller ben"otigt (avrdude).
+Um die Dokumentation zu erstellen wird zus"atzlich ein LaTeX-Kompiler ben"otigt, unter Ubuntu oder Debian bietet sich hier zum Beispiel texlive an.\\
+\\
+F"ur Ubuntu und Debian k"onnen die folgenden Befehle, zum installieren der Abh"angigkeiten, verwendet werden.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Build dependencies},language=sh,label=lst:builddep]
+# install avr toolchain and avr programmer
 sudo apt-get install gcc-avr avrdude
+# install LaTeX-Compiler
+sudo apt-get install texlive-full
 \end{lstlisting}
 \vspace{0.5cm}
 
 \subsubsection{Kompilieren}
+
+Das Kompilieren des C-Sourcecodes durch einen einfachen Make-Aufruf angesto"sen werden.
+Dazu muss im Root-Verzeichniss des Sourcecodes folgender Befehl eingegeben werden.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Compile},language=sh,label=lst:makeall]
+# compile loolou
 make
 \end{lstlisting}
 \vspace{0.5cm}
 
 \subsubsection{Aufr"aumen}
+
+Um die Kompilierten Source wieder zu l"oschen kann der folgende Befehl verwendet werden.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Clean},language=sh,label=lst:makeclean]
+# clean loolou sources
 make clean
 \end{lstlisting}
 \vspace{0.5cm}
 
 \subsubsection{Erstellen der Dokumentation}
+
+Das erstellen der Dokumentation kann ebenso wie das kompilieren des Sourcecodes durch einen Make-Aufruf ausgef"uhrt werden.
+Dazu f"ugt man das Schl"usselwort \grqq{}doc\grqq{} dem \grqq{}make\grqq{} an.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Create documentation},language=sh,label=lst:builddoc]
+# create documenation
 make doc
+# clean documenation
+make doc-clean
 \end{lstlisting}
 \vspace{0.5cm}
 
 
 \subsection{Wie der Attiny2313 programmiert wird}
-tbd % TODO
-\textbf{Der Strom darf nicht w"ahrend dem flashen eingesteckt sein.}
-
 \subsubsection{Programming}
+
+Ebenso wie das Kompilieren der Source kann der Attiny mittels eines vordefinierten Make-Aufrufs programmiert werden.
+Dies kann "uber den Befehl \grqq{}make burn\grqq{} ausgef"uhrt werden.
+Mittels den Variablen \textbf{AVRDUDE\_PROGRAMMER} und \textbf{AVRDUDE\_PORT} kann das Device und der Programmer-Typ definiert werden.
+Die Default-Einstellungen sind \textbf{avrispv2} f"ur den Typ des Programmers und \textbf{/dev/ttyAMC0} f"ur das Device.
+Der Typ des Programmers kann der Dokumentation des Programmers entnommen werden. \\
+\\
+\textbf{Achtung: Sollte der Programmer eine eigene Stromversorgung f"ur den Attiny haben, dann darf der 9V Stromanschluss des Looping Louie nicht angeschlossen werden}, wenn das Programmieren "uber die eingebaute Programmier-Schnittstelle (J1) stattfindet. Andernfalls kann der Programmer besch"adigt werden.
+
+\vspace{0.5cm}
 \begin{lstlisting}[caption={Programming},language=sh,label=lst:makeburn]
+# flash the attiny (using default values)
 make burn
 # or
 make AVRDUDE_PROGRAMMER=avrispv2 AVRDUDE_PORT=/dev/ttyAMC0 burn
